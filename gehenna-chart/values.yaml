@@ -1,0 +1,6 @@
+namespace: aria
+
+frontendImage: docker.io/namanss/gehenna-frontend:latest
+backendImage: docker.io/namanss/gehenna-backend:latest
+mongoexpressImage: docker.io/mongo-express:latest
+mongoImage: docker.io/mongo:latest

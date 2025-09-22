@@ -1,0 +1,75 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gehenna-ingress
+  namespace: {{ .Values.namespace }}
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: gehenna-backend
+            port:
+              number: 3000
+      - path: /api/get
+        pathType: Prefix
+        backend:
+          service:
+            name: gehenna-backend
+            port:
+              number: 3000
+      - path: /add
+        pathType: Prefix
+        backend:
+          service:
+            name: gehenna-backend
+            port:
+              number: 3000
+      - path: /db
+        pathType: Prefix
+        backend:
+          service:
+            name: mongo-express
+            port:
+              number: 5000
+      - path: /gehenna
+        pathType: Prefix
+        backend:
+          service:
+            name: mongo-express
+            port:
+              number: 5000
+      - path: /admin
+        pathType: Prefix
+        backend:
+          service:
+            name: mongo-express
+            port:
+              number: 5000
+      - path: /config
+        pathType: Prefix
+        backend:
+          service:
+            name: mongo-express
+            port:
+              number: 5000
+      - path: /local
+        pathType: Prefix
+        backend:
+          service:
+            name: mongo-express
+            port:
+              number: 5000
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: gehenna-frontend
+            port:
+              number: 4000
