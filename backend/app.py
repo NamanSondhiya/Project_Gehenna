@@ -1,9 +1,15 @@
 from flask import Flask, jsonify
+from flask_cors import CORS
 import os
 from connection import coll
 
 app = Flask(__name__)
+CORS(app)
 PORT = int(os.environ.get('PORT', 8002))
+
+@app.route('/')
+def root():
+    return jsonify({"status": "ok", "service": "backend"})
 
 @app.route('/api/get')
 def get_names():

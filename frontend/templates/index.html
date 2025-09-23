@@ -238,8 +238,8 @@
                                 <h6>Available Endpoints:</h6>
                                 <ul class="list-unstyled">
                                     <li><code>GET /api/get</code> - Retrieve all names</li>
-                                    <li><code>POST /api/add/<name></code> - Add new name</li>
-                                    <li><code>GET /api</code> - API information</li>
+                                    <li><code>GET /add/<name></code> - Add new name</li>
+                                    <li><code>GET /</code> - Backend status</li>
                                 </ul>
                             </div>
                             <div class="col-md-6">
@@ -303,7 +303,7 @@
         // Check backend status
         async function checkBackendStatus() {
             try {
-                const response = await fetch(`${BACKEND_URL}/api`);
+                const response = await fetch(`${BACKEND_URL}/`);
                 if (response.ok) {
                     backendStatus.innerHTML = '<i class="fas fa-check-circle"></i> Online';
                     backendStatus.className = 'badge bg-success';
@@ -330,7 +330,7 @@
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const data = await response.json();
-                displayData(data.names || []);
+                displayData(data || []);
                 showLoading(false);
             } catch (error) {
                 console.error('Error loading data:', error);
