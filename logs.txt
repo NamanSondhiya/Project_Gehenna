@@ -1,0 +1,174 @@
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.04kB done
+#1 DONE 0.0s
+
+#2 [frontend internal] load build definition from Dockerfile
+#2 transferring dockerfile: 243B done
+#2 DONE 0.0s
+
+#3 [backend internal] load build definition from Dockerfile
+#3 transferring dockerfile: 243B done
+#3 DONE 0.0s
+
+#4 [backend internal] load metadata for docker.io/library/python:3.13-alpine
+#4 ...
+
+#5 [auth] library/python:pull token for registry-1.docker.io
+#5 DONE 0.0s
+
+#4 [backend internal] load metadata for docker.io/library/python:3.13-alpine
+#4 DONE 2.6s
+
+#6 [backend internal] load .dockerignore
+#6 transferring context: 2B done
+#6 DONE 0.0s
+
+#7 [frontend internal] load .dockerignore
+#7 transferring context: 2B done
+#7 DONE 0.0s
+
+#8 [frontend 1/6] FROM docker.io/library/python:3.13-alpine@sha256:9ba6d8cbebf0fb6546ae71f2a1c14f6ffd2fdab83af7fa5669734ef30ad48844
+#8 DONE 0.0s
+
+#9 [backend 2/6] WORKDIR /app
+#9 CACHED
+
+#10 [frontend internal] load build context
+#10 transferring context: 439B done
+#10 DONE 0.0s
+
+#11 [backend internal] load build context
+#11 transferring context: 461B done
+#11 DONE 0.0s
+
+#12 [frontend 3/6] RUN python -m venv venv
+#12 DONE 2.8s
+
+#13 [backend 4/6] COPY requirements.txt .
+#13 DONE 0.0s
+
+#14 [frontend 4/6] COPY requirements.txt .
+#14 DONE 0.0s
+
+#15 [frontend 5/6] RUN pip install -r requirements.txt
+#15 3.391 Collecting flask (from -r requirements.txt (line 1))
+#15 6.008   Downloading flask-3.1.2-py3-none-any.whl.metadata (3.2 kB)
+#15 6.469 Collecting requests (from -r requirements.txt (line 2))
+#15 6.515   Downloading requests-2.32.5-py3-none-any.whl.metadata (4.9 kB)
+#15 6.599 Collecting blinker>=1.9.0 (from flask->-r requirements.txt (line 1))
+#15 6.627   Downloading blinker-1.9.0-py3-none-any.whl.metadata (1.6 kB)
+#15 6.795 Collecting click>=8.1.3 (from flask->-r requirements.txt (line 1))
+#15 6.829   Downloading click-8.3.0-py3-none-any.whl.metadata (2.6 kB)
+#15 6.912 Collecting itsdangerous>=2.2.0 (from flask->-r requirements.txt (line 1))
+#15 6.956   Downloading itsdangerous-2.2.0-py3-none-any.whl.metadata (1.9 kB)
+#15 7.346 Collecting jinja2>=3.1.2 (from flask->-r requirements.txt (line 1))
+#15 7.445   Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+#15 7.726 Collecting markupsafe>=2.1.1 (from flask->-r requirements.txt (line 1))
+#15 7.816   Downloading MarkupSafe-3.0.2-cp313-cp313-musllinux_1_2_x86_64.whl.metadata (4.0 kB)
+#15 7.948 Collecting werkzeug>=3.1.0 (from flask->-r requirements.txt (line 1))
+#15 7.981   Downloading werkzeug-3.1.3-py3-none-any.whl.metadata (3.7 kB)
+#15 8.237 Collecting charset_normalizer<4,>=2 (from requests->-r requirements.txt (line 2))
+#15 8.263   Downloading charset_normalizer-3.4.3-cp313-cp313-musllinux_1_2_x86_64.whl.metadata (36 kB)
+#15 8.403 Collecting idna<4,>=2.5 (from requests->-r requirements.txt (line 2))
+#15 8.425   Downloading idna-3.10-py3-none-any.whl.metadata (10 kB)
+#15 8.532 Collecting urllib3<3,>=1.21.1 (from requests->-r requirements.txt (line 2))
+#15 8.572   Downloading urllib3-2.5.0-py3-none-any.whl.metadata (6.5 kB)
+#15 8.637 Collecting certifi>=2017.4.17 (from requests->-r requirements.txt (line 2))
+#15 8.772   Downloading certifi-2025.8.3-py3-none-any.whl.metadata (2.4 kB)
+#15 8.822 Downloading flask-3.1.2-py3-none-any.whl (103 kB)
+#15 9.108 Downloading requests-2.32.5-py3-none-any.whl (64 kB)
+#15 9.929 Downloading charset_normalizer-3.4.3-cp313-cp313-musllinux_1_2_x86_64.whl (152 kB)
+#15 ...
+
+#16 [backend 5/6] RUN pip install -r requirements.txt
+#16 3.388 Collecting flask (from -r requirements.txt (line 1))
+#16 6.066   Downloading flask-3.1.2-py3-none-any.whl.metadata (3.2 kB)
+#16 6.387 Collecting flask-cors (from -r requirements.txt (line 2))
+#16 6.487   Downloading flask_cors-6.0.1-py3-none-any.whl.metadata (5.3 kB)
+#16 8.286 Collecting pymongo (from -r requirements.txt (line 3))
+#16 8.306   Downloading pymongo-4.15.1.tar.gz (2.5 MB)
+#16 ...
+
+#15 [frontend 5/6] RUN pip install -r requirements.txt
+#15 11.17 Downloading idna-3.10-py3-none-any.whl (70 kB)
+#15 11.43 Downloading urllib3-2.5.0-py3-none-any.whl (129 kB)
+#15 11.77 Downloading blinker-1.9.0-py3-none-any.whl (8.5 kB)
+#15 11.90 Downloading certifi-2025.8.3-py3-none-any.whl (161 kB)
+#15 13.45 Downloading click-8.3.0-py3-none-any.whl (107 kB)
+#15 14.32 Downloading itsdangerous-2.2.0-py3-none-any.whl (16 kB)
+#15 14.51 Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+#15 14.83 Downloading MarkupSafe-3.0.2-cp313-cp313-musllinux_1_2_x86_64.whl (23 kB)
+#15 14.92 Downloading werkzeug-3.1.3-py3-none-any.whl (224 kB)
+#15 15.17 Installing collected packages: urllib3, markupsafe, itsdangerous, idna, click, charset_normalizer, certifi, blinker, werkzeug, requests, jinja2, flask
+#15 15.74 
+#15 15.74 Successfully installed blinker-1.9.0 certifi-2025.8.3 charset_normalizer-3.4.3 click-8.3.0 flask-3.1.2 idna-3.10 itsdangerous-2.2.0 jinja2-3.1.6 markupsafe-3.0.2 requests-2.32.5 urllib3-2.5.0 werkzeug-3.1.3
+#15 DONE 16.0s
+
+#16 [backend 5/6] RUN pip install -r requirements.txt
+#16 15.17      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.5/2.5 MB 334.8 kB/s  0:00:06
+#16 15.46   Installing build dependencies: started
+#16 ...
+
+#17 [frontend 6/6] COPY . .
+#17 DONE 0.0s
+
+#18 [frontend] exporting to image
+#18 exporting layers 0.1s done
+#18 writing image sha256:411d5e03eeb8f6b4034849c8e6f1673228794f323c936d867c06908d266459b3 done
+#18 naming to docker.io/library/gehenna_20-frontend done
+#18 DONE 0.1s
+
+#19 [frontend] resolving provenance for metadata file
+#19 DONE 0.0s
+
+#16 [backend 5/6] RUN pip install -r requirements.txt
+#16 18.35   Installing build dependencies: finished with status 'done'
+#16 18.35   Getting requirements to build wheel: started
+#16 18.48   Getting requirements to build wheel: finished with status 'done'
+#16 18.48   Preparing metadata (pyproject.toml): started
+#16 19.12   Preparing metadata (pyproject.toml): finished with status 'done'
+#16 19.18 Collecting blinker>=1.9.0 (from flask->-r requirements.txt (line 1))
+#16 19.20   Downloading blinker-1.9.0-py3-none-any.whl.metadata (1.6 kB)
+#16 19.28 Collecting click>=8.1.3 (from flask->-r requirements.txt (line 1))
+#16 19.31   Downloading click-8.3.0-py3-none-any.whl.metadata (2.6 kB)
+#16 19.43 Collecting itsdangerous>=2.2.0 (from flask->-r requirements.txt (line 1))
+#16 19.45   Downloading itsdangerous-2.2.0-py3-none-any.whl.metadata (1.9 kB)
+#16 19.53 Collecting jinja2>=3.1.2 (from flask->-r requirements.txt (line 1))
+#16 19.55   Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+#16 19.69 Collecting markupsafe>=2.1.1 (from flask->-r requirements.txt (line 1))
+#16 19.72   Downloading MarkupSafe-3.0.2-cp313-cp313-musllinux_1_2_x86_64.whl.metadata (4.0 kB)
+#16 19.79 Collecting werkzeug>=3.1.0 (from flask->-r requirements.txt (line 1))
+#16 19.81   Downloading werkzeug-3.1.3-py3-none-any.whl.metadata (3.7 kB)
+#16 19.89 Collecting dnspython<3.0.0,>=1.16.0 (from pymongo->-r requirements.txt (line 3))
+#16 19.93   Downloading dnspython-2.8.0-py3-none-any.whl.metadata (5.7 kB)
+#16 19.96 Downloading flask-3.1.2-py3-none-any.whl (103 kB)
+#16 20.07 Downloading flask_cors-6.0.1-py3-none-any.whl (13 kB)
+#16 20.13 Downloading dnspython-2.8.0-py3-none-any.whl (331 kB)
+#16 20.31 Downloading blinker-1.9.0-py3-none-any.whl (8.5 kB)
+#16 20.37 Downloading click-8.3.0-py3-none-any.whl (107 kB)
+#16 20.47 Downloading itsdangerous-2.2.0-py3-none-any.whl (16 kB)
+#16 20.50 Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+#16 20.59 Downloading MarkupSafe-3.0.2-cp313-cp313-musllinux_1_2_x86_64.whl (23 kB)
+#16 20.69 Downloading werkzeug-3.1.3-py3-none-any.whl (224 kB)
+#16 21.08 Building wheels for collected packages: pymongo
+#16 21.08   Building wheel for pymongo (pyproject.toml): started
+#16 21.11   Building wheel for pymongo (pyproject.toml): finished with status 'done'
+#16 21.11   Created wheel for pymongo: filename=pymongo-4.15.1-cp313-cp313-linux_x86_64.whl size=701454 sha256=df33c734c324bbd206f9021a83b78b26c562b64217d136fd76a55422da3de6b6
+#16 21.11   Stored in directory: /root/.cache/pip/wheels/70/a6/40/ed5d02f124aab208f82386ff0a7777effe3ee25377f974d0e0
+#16 21.11 Successfully built pymongo
+#16 21.12 Installing collected packages: markupsafe, itsdangerous, dnspython, click, blinker, werkzeug, pymongo, jinja2, flask, flask-cors
+#16 22.08 
+#16 22.08 Successfully installed blinker-1.9.0 click-8.3.0 dnspython-2.8.0 flask-3.1.2 flask-cors-6.0.1 itsdangerous-2.2.0 jinja2-3.1.6 markupsafe-3.0.2 pymongo-4.15.1 werkzeug-3.1.3
+#16 DONE 22.3s
+
+#20 [backend 6/6] COPY . .
+#20 DONE 0.0s
+
+#21 [backend] exporting to image
+#21 exporting layers 0.1s done
+#21 writing image sha256:357a1cb4a41eaa8112f1dbb73d00965045d2c48f22822ab6b638941f3057fe9c done
+#21 naming to docker.io/library/gehenna_20-backend done
+#21 DONE 0.1s
+
+#22 [backend] resolving provenance for metadata file
+#22 DONE 0.0s

@@ -1,6 +1,6 @@
 services:
   mongo:
-    image: mongo:7-alpine
+    image: mongo:noble
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: password123
