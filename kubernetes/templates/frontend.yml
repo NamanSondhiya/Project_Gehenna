@@ -17,10 +17,15 @@ spec:
           image: {{ .Values.frontendImage }}
           env:
             - name: PORT
-              value: "8001"
-          envFrom:
-            - configMapRef:
-                name: gehenna-config
+              valueFrom:
+                configMapKeyRef:
+                  name: gehenna-config
+                  key: PORT
+            - name: BACKEND_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: gehenna-config
+                  key: BACKEND_URL
           ports:
             - containerPort: 8001
 ---

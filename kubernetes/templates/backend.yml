@@ -21,7 +21,10 @@ spec:
         - name: MONGO_URL
           value: mongodb://$(MONGO_USERNAME):$(MONGO_PASSWORD)@$(MONGO_HOST):$(MONGO_PORT)/$(MONGO_DATABASE)?authSource=admin
         - name: PORT
-          value: "8002"
+          valueFrom:
+            configMapKeyRef:
+              name: gehenna-config
+              key: PORT
         envFrom:
         - configMapRef:
             name: gehenna-config
