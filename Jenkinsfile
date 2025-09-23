@@ -11,7 +11,7 @@ pipeline{
         }
         stage("Clone Code From Github"){
             steps{
-                git url:"https://github.com/NamanSondhiya/Project_Gehenna.git" , branch: "dev"
+                git url:"https://github.com/NamanSondhiya/Project_Gehenna.git" , branch: "devOps"
             }
         }
         stage("Security Scans") {
