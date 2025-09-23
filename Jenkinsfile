@@ -6,7 +6,7 @@ pipeline{
     stages{
         stage("Clean WorkSpace") {
             steps {
-                CleanWs()
+                cleanWs()
             }
         }
         stage("Clone Code From Github"){
