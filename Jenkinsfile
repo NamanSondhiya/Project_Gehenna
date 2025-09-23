@@ -52,7 +52,7 @@ pipeline{
         }
         stage("Build with Docker compose") {
             steps {
-                sh 'docker compose down -v --remove-orphans || true'
+                sh 'docker compose down'
                 sh 'docker compose up -d --build > logs.txt'
             }
         }
