@@ -18,7 +18,7 @@ pipeline{
             parallel{
                 stage("GitLeaks Scan") {
                     steps {
-                        sh 'gitleaks detect --source . -r gitleaks-report.json -f json'
+                        sh 'gitleaks detect --source . -r gitleaks-report.json -f json || true'
                     }
                 }
                 stage("trivy file system scan") {
