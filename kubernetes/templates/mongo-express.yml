@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-express
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: mongo-express
+  template:
+    metadata:
+      labels:
+        app: mongo-express
+    spec:
+      containers:
+      - name: mongo-express
+        image: {{ .Values.mongoexpressImage }}
+        ports:
+        - containerPort: 8081
+        envFrom:
+        - configMapRef:
+            name: gehenna-config
+        - secretRef:
+            name: gehenna-secrets
+        env:
+        - name: ME_CONFIG_MONGODB_ADMINUSERNAME
+          valueFrom:
+            secretKeyRef:
+              name: gehenna-secrets
+              key: MONGO_USERNAME
+        - name: ME_CONFIG_MONGODB_ADMINPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: gehenna-secrets
+              key: MONGO_PASSWORD
+        - name: ME_CONFIG_MONGODB_URL
+          value: mongodb://$(MONGO_USERNAME):$(MONGO_PASSWORD)@$(MONGO_HOST):$(MONGO_PORT)/
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-express
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app: mongo-express
+  ports:
+  - port: 8081
+    targetPort: 8081
+  type: ClusterIP
+

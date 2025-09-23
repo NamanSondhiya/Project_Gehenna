@@ -16,12 +16,17 @@ spec:
       - name: gehenna-backend
         image: {{ .Values.backendImage }}
         ports:
-        - containerPort: 3000
+        - containerPort: 8002
         env:
         - name: MONGO_URL
-          value: mongo.{{ .Values.namespace }}.svc.cluster.local:27017
+          value: mongodb://$(MONGO_USERNAME):$(MONGO_PASSWORD)@$(MONGO_HOST):$(MONGO_PORT)/$(MONGO_DATABASE)?authSource=admin
         - name: PORT
-          value: "3000"
+          value: "8002"
+        envFrom:
+        - configMapRef:
+            name: gehenna-config
+        - secretRef:
+            name: gehenna-secrets
 ---
 apiVersion: v1
 kind: Service
@@ -32,7 +37,7 @@ spec:
   selector:
     app: gehenna-backend
   ports:
-  - port: 3000
-    targetPort: 3000
-  type: NodePort
+  - port: 8002
+    targetPort: 8002
+  type: ClusterIP
 

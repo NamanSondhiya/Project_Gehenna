@@ -1,111 +1,56 @@
-version: '3.8'
-
 services:
-  # MongoDB Database
   mongo:
-    image: mongo:7.0
-    container_name: gehenna-mongo
-    restart: unless-stopped
+    image: mongo:noble
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: password123
-      MONGO_INITDB_DATABASE: gehenna
     ports:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
-      - ./mongo-init:/docker-entrypoint-initdb.d
     networks:
-      - gehenna-network
-    healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 40s
+      - gehenna
 
-  # Backend API Service
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    container_name: gehenna-backend
-    restart: unless-stopped
+    build: ./backend
     environment:
       MONGO_URL: mongodb://admin:password123@mongo:27017/gehenna?authSource=admin
       PORT: 8002
-      DEBUG: false
-      FLASK_ENV: production
     ports:
       - "8002:8002"
-    volumes:
-      - ./backend/logs:/app/logs
     depends_on:
-      mongo:
-        condition: service_healthy
+      - mongo
     networks:
-      - gehenna-network
-    healthcheck:
-      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8002/health', timeout=5)"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+      - gehenna
 
-  # Frontend Web Service
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: gehenna-frontend
-    restart: unless-stopped
+    build: ./frontend
     environment:
       BACKEND_URL: http://backend:8002
       PORT: 8001
-      DEBUG: false
-      FLASK_ENV: production
     ports:
       - "8001:8001"
-    volumes:
-      - ./frontend/logs:/app/logs
     depends_on:
-      backend:
-        condition: service_healthy
+      - backend
     networks:
-      - gehenna-network
-    healthcheck:
-      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8001/health', timeout=5)"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
+      - gehenna
 
-  # Mongo Express (Web-based MongoDB admin interface)
   mongo-express:
-    image: mongo-express:1.0.0
-    container_name: gehenna-mongo-express
-    restart: unless-stopped
+    image: mongo-express:1.0.2-20-alpine3.19
     ports:
       - "8081:8081"
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: admin
       ME_CONFIG_MONGODB_ADMINPASSWORD: password123
       ME_CONFIG_MONGODB_URL: mongodb://admin:password123@mongo:27017/
-      ME_CONFIG_BASICAUTH_USERNAME: admin
-      ME_CONFIG_BASICAUTH_PASSWORD: password123
     depends_on:
-      mongo:
-        condition: service_healthy
+      - mongo
     networks:
-      - gehenna-network
+      - gehenna
 
 volumes:
   mongo_data:
-    driver: local
 
 networks:
-  gehenna-network:
+  gehenna:
     driver: bridge
-    ipam:
-      config:
-        - subnet: 172.20.0.0/16
