@@ -5,6 +5,9 @@ pipeline {
         SONAR_EV = tool 'Sonar'
         IMAGE_TAG = "${BUILD_NUMBER}"
     }
+    tools {
+        nodejs 'nodejs20'
+    }
     stages {
         stage('Clean the Workspace') {
             steps {
