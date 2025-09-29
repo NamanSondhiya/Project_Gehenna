@@ -20,9 +20,7 @@ pipeline {
         }
         stage('GitLeaks Scan') {
             steps {
-                script {
-                    gitleaks_scan("true")
-                }
+                sh 'gitleaks detect --source . -r gitleaks-report.json || true'
             }
         }
         stage('SonarQube Analysi & Quality scan') {
