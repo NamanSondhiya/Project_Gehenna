@@ -21,7 +21,7 @@ pipeline {
         stage('GitLeaks Scan') {
             steps {
                 script {
-                    gitleaks_scan()
+                    gitleaks_scan(true)
                 }
             }
         }
