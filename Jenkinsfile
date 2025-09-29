@@ -23,17 +23,17 @@ pipeline {
                 sh 'gitleaks detect --source . -r gitleaks-report.json || true'
             }
         }
-        stage('SonarQube Analysi & Quality scan') {
+        stage('SonarQube Analysis') {
             steps {
                 script {
-                    sonarqube_scan(SONAR_EV, "gehenna", "gehenna")
+                    sonarqube_analysis("$SONAR_EV", "gehenna", "gehenna")
                 }
             }
         }
         stage('Quality Gate') {
             steps {
                 script {
-                    sonarqueb_QualityGates(2, true)           
+                    sonarqube_QualityGates(2, true)           
                 }
             }
         }
