@@ -13,7 +13,7 @@ pipeline {
         }
         stage('CodeClone From GitHub') {
             steps {
-                scripts{
+                script {
                     code_checkout("https://github.com/NamanSondhiya/Project_Gehenna.git", "devOps")
                 }
             }
