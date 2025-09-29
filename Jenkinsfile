@@ -14,7 +14,42 @@ pipeline {
         stage('CodeClone From GitHub') {
             steps {
                 script {
-                    code_checkout("https://github.com/NamanSondhiya/Project_Gehenna.git", "devOps")
+                    git_clone("https://github.com/NamanSondhiya/Project_Gehenna.git", "devOps")
+                }
+            }
+        }
+        stage('GitLeaks Scan') {
+            steps {
+                script {
+                    gitleaks_scan()
+                }
+            }
+        }
+        stage('SonarQube Analysi & Quality scan') {
+            steps {
+                script {
+                    sonarqube_scan("$SONAR_EV", "gehenna", "gehenna")
+                }
+            }
+        }
+        stage('Quality Gate') {
+            steps {
+                script {
+                    sonarqueb_QualityGates(2, true)           
+                }
+            }
+        }
+        stage('Owasp Dependency Check') {
+            steps {
+                script {
+                    owasp_scan()
+                }
+            }
+        }
+        stage('Trivy FileSystem Scan') {
+            steps {
+                script {
+                    trivy_fs_scan()
                 }
             }
         }
