@@ -21,21 +21,21 @@ pipeline {
         stage('GitLeaks Scan') {
             steps {
                 script {
-                    gitleaks_scan("true")
+                    gitleaks_scan(true)
                 }
             }
         }
         stage('SonarQube Analysi & Quality scan') {
             steps {
                 script {
-                    sonarqube_scan("$SONAR_EV", "gehenna", "gehenna")
+                    sonarqube_scan(SONAR_EV, "gehenna", "gehenna")
                 }
             }
         }
         stage('Quality Gate') {
             steps {
                 script {
-                    sonarqueb_QualityGates(2, "true")           
+                    sonarqueb_QualityGates(2, true)           
                 }
             }
         }
