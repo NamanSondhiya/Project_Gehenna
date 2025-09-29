@@ -21,7 +21,7 @@ pipeline {
         stage('GitLeaks Scan') {
             steps {
                 script {
-                    gitleaks_scan(enforce=true)
+                    gitleaks_scan("enforce=true")
                 }
             }
         }
@@ -35,7 +35,7 @@ pipeline {
         stage('Quality Gate') {
             steps {
                 script {
-                    sonarqueb_QualityGates(2, true)           
+                    sonarqueb_QualityGates(2, "true")           
                 }
             }
         }
