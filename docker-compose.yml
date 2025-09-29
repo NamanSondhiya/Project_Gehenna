@@ -11,12 +11,14 @@ services:
       - mongo_data:/data/db
     networks:
       - gehenna
+    restart: unless-stopped
 
   backend:
     build: ./backend
     environment:
       MONGO_URL: mongodb://admin:password123@mongo:27017/gehenna?authSource=admin
       PORT: 8002
+      CONTAINER_ENV: "true"
     ports:
       - "8002:8002"
     depends_on:
@@ -29,6 +31,7 @@ services:
     environment:
       BACKEND_URL: http://backend:8002
       PORT: 8001
+      CONTAINER_ENV: "true"
     ports:
       - "8001:8001"
     depends_on:
