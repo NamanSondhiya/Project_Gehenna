@@ -3,7 +3,7 @@ pipeline {
     agent any
     environment {
         SONAR_EV = tool 'Sonar'
-        IMAGE_TAG = "$(BUILD_NUMBER)"
+        IMAGE_TAG = "${BUILD_NUMBER}"
     }
     stages {
         stage('Clean the Workspace') {
