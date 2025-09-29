@@ -26,7 +26,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 script {
-                    sonarqube_analysis("$SONAR_EV", "gehenna", "gehenna")
+                    sonarqube_analysis(SONAR_EV, "gehenna", "gehenna", "SonarToken")
                 }
             }
         }
