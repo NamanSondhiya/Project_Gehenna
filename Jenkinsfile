@@ -36,7 +36,7 @@ pipeline {
         stage('Quality Gate') {
             steps {
                 script {
-                    sonarqube_QualityGate(5, true)           
+                    sonarqube_QualityGate(5, true) 
                 }
             }
         }
