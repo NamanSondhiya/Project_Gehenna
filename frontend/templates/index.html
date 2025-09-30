@@ -180,12 +180,19 @@
                             <div class="mb-3">
                                 <label for="nameInput" class="form-label">Name</label>
                                 <input type="text" class="form-control" id="nameInput"
-                                       placeholder="Enter a name..." required>
+                                       placeholder="Enter a name..." required maxlength="50" pattern="[a-zA-Z\s]+">
+                                <div class="form-text">Only letters and spaces, max 50 characters</div>
                             </div>
                             <button type="submit" class="btn btn-primary w-100">
                                 <i class="fas fa-plus me-2"></i>Add to Database
                             </button>
                         </form>
+                        <hr>
+                        <div class="mb-3">
+                            <label for="searchInput" class="form-label">Search Names</label>
+                            <input type="text" class="form-control" id="searchInput"
+                                   placeholder="Type to search...">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -238,8 +245,11 @@
                                 <h6>Available Endpoints:</h6>
                                 <ul class="list-unstyled">
                                     <li><code>GET /api/get</code> - Retrieve all names</li>
-                                    <li><code>GET /add/<name></code> - Add new name</li>
+                                    <li><code>POST /api/add/<name></code> - Add new name</li>
+                                    <li><code>DELETE /api/delete/<name></code> - Delete a name</li>
+                                    <li><code>GET /api/search/<query></code> - Search names</li>
                                     <li><code>GET /</code> - Backend status</li>
+                                    <li><code>GET /health</code> - Health check</li>
                                 </ul>
                             </div>
                             <div class="col-md-6">
@@ -367,6 +377,9 @@
                             </div>
                             <h6 class="card-title">${escapeHtml(name)}</h6>
                             <small class="text-muted">Entry #${index + 1}</small>
+                            <button class="btn btn-outline-danger btn-sm mt-2" onclick="deleteName('${escapeHtml(name)}')">
+                                <i class="fas fa-trash me-1"></i>Delete
+                            </button>
                         </div>
                     </div>
                 `;
@@ -387,12 +400,14 @@
             }
 
             try {
-                const response = await fetch(`${BACKEND_URL}/add/${encodeURIComponent(name)}`);
+                const response = await fetch(`${BACKEND_URL}/api/add/${encodeURIComponent(name)}`, {
+                    method: 'POST'
+                });
+                const result = await response.json();
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    throw new Error(result.error || `HTTP error! status: ${response.status}`);
                 }
 
-                const result = await response.json();
                 showAlert(result.message, 'success');
                 nameInput.value = '';
                 loadData(); // Refresh data
@@ -401,6 +416,57 @@
                 showAlert('Failed to add name: ' + error.message, 'danger');
             }
         });
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const query = e.target.value.trim();
+            if (query.length > 0) {
+                searchData(query);
+            } else {
+                loadData();
+            }
+        });
+
+        // Search data
+        async function searchData(query) {
+            showLoading(true);
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/search/${encodeURIComponent(query)}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                displayData(data || []);
+                showLoading(false);
+            } catch (error) {
+                console.error('Error searching data:', error);
+                showAlert('Failed to search data: ' + error.message, 'danger');
+                showLoading(false);
+            }
+        }
+
+        // Delete name
+        async function deleteName(name) {
+            if (!confirm(`Are you sure you want to delete "${name}"?`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/delete/${encodeURIComponent(name)}`, {
+                    method: 'DELETE'
+                });
+                const result = await response.json();
+                if (!response.ok) {
+                    throw new Error(result.error || `HTTP error! status: ${response.status}`);
+                }
+
+                showAlert(result.message, 'success');
+                loadData(); // Refresh data
+            } catch (error) {
+                console.error('Error deleting name:', error);
+                showAlert('Failed to delete name: ' + error.message, 'danger');
+            }
+        }
 
         // Refresh data
         function refreshData() {

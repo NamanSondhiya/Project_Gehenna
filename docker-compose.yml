@@ -10,6 +10,7 @@ services:
       - mongo_data:/data/db
     networks:
       - gehenna
+    restart: unless-stopped
 
   backend:
     build: ./backend
