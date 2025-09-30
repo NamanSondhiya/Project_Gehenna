@@ -238,9 +238,8 @@
                                 <h6>Available Endpoints:</h6>
                                 <ul class="list-unstyled">
                                     <li><code>GET /api/get</code> - Retrieve all names</li>
-                                    <li><code>POST /api/add</code> - Add new name (JSON body)</li>
+                                    <li><code>GET /add/<name></code> - Add new name</li>
                                     <li><code>GET /</code> - Backend status</li>
-                                    <li><code>GET /health</code> - Health check</li>
                                 </ul>
                             </div>
                             <div class="col-md-6">
@@ -304,13 +303,7 @@
         // Check backend status
         async function checkBackendStatus() {
             try {
-                const response = await fetch(`${BACKEND_URL}/`, {
-                    headers: {
-                        'Accept': 'application/json'
-                    },
-                    timeout: 5000
-                });
-                
+                const response = await fetch(`${BACKEND_URL}/`);
                 if (response.ok) {
                     backendStatus.innerHTML = '<i class="fas fa-check-circle"></i> Online';
                     backendStatus.className = 'badge bg-success';
@@ -324,7 +317,7 @@
                 backendStatus.className = 'badge bg-danger';
                 apiStatus.className = 'badge bg-danger';
                 apiStatus.innerHTML = '<i class="fas fa-times-circle"></i> API: Offline';
-                console.warn('Backend connection failed:', error.message);
+                showAlert('Backend is not responding. Please check if the backend service is running.', 'danger');
             }
         }
 
@@ -332,24 +325,12 @@
         async function loadData() {
             showLoading(true);
             try {
-                const response = await fetch(`${BACKEND_URL}/api/get`, {
-                    headers: {
-                        'Accept': 'application/json'
-                    },
-                    timeout: 10000
-                });
-                
-                const data = await response.json();
-                
+                const response = await fetch(`${BACKEND_URL}/api/get`);
                 if (!response.ok) {
-                    throw new Error(data.error || `HTTP error! status: ${response.status}`);
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                
-                if (!Array.isArray(data)) {
-                    throw new Error('Invalid data format received');
-                }
-                
-                displayData(data);
+                const data = await response.json();
+                displayData(data || []);
                 showLoading(false);
             } catch (error) {
                 console.error('Error loading data:', error);
@@ -405,33 +386,13 @@
                 return;
             }
 
-            // Client-side validation
-            if (name.length > 100) {
-                showAlert('Name must be 100 characters or less', 'warning');
-                return;
-            }
-
-            if (/[<>&"']/.test(name)) {
-                showAlert('Name contains invalid characters', 'warning');
-                return;
-            }
-
             try {
-                const response = await fetch(`${BACKEND_URL}/api/add`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({ name: name })
-                });
-
-                const result = await response.json();
-                
+                const response = await fetch(`${BACKEND_URL}/add/${encodeURIComponent(name)}`);
                 if (!response.ok) {
-                    throw new Error(result.error || `HTTP error! status: ${response.status}`);
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
+                const result = await response.json();
                 showAlert(result.message, 'success');
                 nameInput.value = '';
                 loadData(); // Refresh data
