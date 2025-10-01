@@ -40,21 +40,17 @@ pipeline {
                 }
             }
         }
-        stage('SonarQube Analysis & QualityGate') {
-            parallel {
-                stage('SonarQube Analysis') {
-                    steps {
-                        script {
-                            sonarqube_analysis(SONAR_EV, "gehenna", "gehenna")
-                        }
-                    }
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    sonarqube_analysis(SONAR_EV, "gehenna", "gehenna")
                 }
-                stage('Quality Gate') {
-                    steps {
-                        script {
-                            sonarqube_QualityGate(5, true) 
-                        }
-                    }
+            }
+        }
+        stage('Quality Gate') {
+            steps {
+                script {
+                    sonarqube_QualityGate(5, true) 
                 }
             }
         }
