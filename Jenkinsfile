@@ -85,21 +85,17 @@ pipeline {
                 }
             }
         }
-        stage('Trivy Image Scan') {
-            parallel {
-                stage('Scan Frontend Image') {
-                    steps {
-                        script {
-                            trivy_image_scan("${FRONTEND}", "${params.IMAGE_TAG_F}", "${DOCKERHUB_USER}")    
-                        }
-                    }
+        stage('Scan Frontend Image') {
+            steps {
+                script {
+                    trivy_image_scan("${FRONTEND}", "${params.IMAGE_TAG_F}", "${DOCKERHUB_USER}")    
                 }
-                stage('Scan Backend Image') {
-                    steps {
-                        script {
-                            trivy_image_scan("${BACKEND}", "${params.IMAGE_TAG_B}", "${DOCKERHUB_USER}")  
-                        }
-                    }
+            }
+        }
+        stage('Scan Backend Image') {
+            steps {
+                script {
+                    trivy_image_scan("${BACKEND}", "${params.IMAGE_TAG_B}", "${DOCKERHUB_USER}")  
                 }
             }
         }
