@@ -8,7 +8,7 @@ ENV PATH="/app/venv/bin:$PATH"
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-ADD . .
+COPY . .
 
 EXPOSE 8001
 
