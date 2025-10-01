@@ -4,12 +4,13 @@ pipeline {
     parameters {
         booleanParam(name: 'Deploy_with_DockerCompose', defaultValue: false, description: 'Deploys Docker Image Locally with docker compose')
         booleanParam(name: 'Push_to_DockerHub', defaultValue: false, description: 'Uploads the Image to the Docker Hub') 
+        string(name: 'IMAGE_TAG_F', defaultValue: latest, description: 'Enter the Frontend Docker image tag')
+        string(name: 'IMAGE_TAG_B', defaultValue: latest, description: 'Enter the Backend Docker image tag')
     }
     environment {
         SONAR_EV = tool 'Sonar'
         FRONTEND = "gehenna-frontend-ii"
         BACKEND = "gehenna-backend-ii"
-        IMAGE_TAG = "${BUILD_NUMBER}"
         DOCKERHUB_USER = "namanss"
     }
     tools {
@@ -61,14 +62,14 @@ pipeline {
                 stage ('Build Frontend') {
                     steps {
                         script {
-                            docker_build("${FRONTEND}", "${IMAGE_TAG}", "${DOCKERHUB_USER}", "./frontend")
+                            docker_build("${FRONTEND}", "${params.IMAGE_TAG_F}", "${DOCKERHUB_USER}", "./frontend")
                         }
                     }
                 }
                 stage ('Build Backend') {
                     steps {
                         script {
-                            docker_build("${BACKEND}", "${IMAGE_TAG}", "${DOCKERHUB_USER}", "./backend")
+                            docker_build("${BACKEND}", "${params.IMAGE_TAG_B}", "${DOCKERHUB_USER}", "./backend")
                         }
                     }
                 }
@@ -79,14 +80,14 @@ pipeline {
                 stage('Scan Frontend Image') {
                     steps {
                         script {
-                            trivy_image_scan("${FRONTEND}", "${IMAGE_TAG}")
+                            trivy_image_scan("${FRONTEND}", "${params.IMAGE_TAG_F}")
                         }
                     }
                 }
                 stage('Scan Backend Image') {
                     steps {
                         script {
-                            trivy_image_scan("${BACKEND}", "${IMAGE_TAG}")  
+                            trivy_image_scan("${BACKEND}", "${params.IMAGE_TAG_B}")  
                         }
                     }
                 }
@@ -100,14 +101,14 @@ pipeline {
                 stage('Pushing Frontend to Dockerhub') {
                     steps {
                         script {
-                            docker_push("${FRONTEND}", "${IMAGE_TAG}", "${DOCKERHUB_USER}")
+                            docker_push("${FRONTEND}", "${params.IMAGE_TAG_F}", "${DOCKERHUB_USER}")
                         }
                     }
                 }
                 stage('Pushing Backend to Dockerhub') {
                     steps {
                         script {
-                            docker_push("${BACKEND}", "${IMAGE_TAG}", "${DOCKERHUB_USER}")
+                            docker_push("${BACKEND}", "${params.IMAGE_TAG_B}", "${DOCKERHUB_USER}")
                         }
                     }
                 }
