@@ -60,6 +60,13 @@ pipeline {
                             docker_build("${FRONTEND}", "${IMAGE_TAG}", "${DOCKERHUB_USER}", "./frontend")
                         }
                     }
+                    stage('Pushing Frontend to Dockerhub') {
+                       steps {
+                           script {
+                               docker_push("${FRONTEND}", "${IMAGE_TAG}", "${DOCKERHUB_USER}")
+                           }
+                       }
+                    }
                 }
                 stage ('Build Backend') {
                     steps {
@@ -67,22 +74,11 @@ pipeline {
                             docker_build("${BACKEND}", "${IMAGE_TAG}", "${DOCKERHUB_USER}", "./backend")
                         }
                     }
-                }
-            }
-        }
-        stage('Push To Dockerhub') {
-            parallel {
-                stage('Pushing Frontend to Dockerhub') {
-                    steps {
-                        script {
-                            docker_push("${FRONTEND}", "${IMAGE_TAG}", "${DOCKERHUB_USER}")
-                        }
-                    }
-                }
-                stage('Pushing Backend to Dockerhub') {
-                    steps {
-                        script {
-                            docker_push("${BACKEND}", "${IMAGE_TAG}", "${DOCKERHUB_USER}")
+                    stage('Pushing Backend to Dockerhub') {
+                        steps {
+                            script {
+                                docker_push("${BACKEND}", "${IMAGE_TAG}", "${DOCKERHUB_USER}")
+                            }
                         }
                     }
                 }
