@@ -83,6 +83,9 @@ pipeline {
             }
         }
         stage('Push To Dockerhub') {
+            when {
+                expression { params.Push_to_DockerHub }
+            }
             parallel {
                 stage('Pushing Frontend to Dockerhub') {
                     steps {
