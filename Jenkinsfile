@@ -3,7 +3,10 @@ pipeline {
     agent any
     environment {
         SONAR_EV = tool 'Sonar'
+        FRONTEND = "gehenna-frontend-II"
+        BACKEND = "gehenna-backend-II"
         IMAGE_TAG = "${BUILD_NUMBER}"
+        DOCKERHUB_USER = "namanss"
     }
     tools {
         nodejs 'nodejs20'
@@ -19,11 +22,6 @@ pipeline {
                 script {
                     git_clone("https://github.com/NamanSondhiya/Project_Gehenna.git", "devOps")
                 }
-            }
-        }
-        stage('GitLeaks Scan') {
-            steps {
-                sh 'gitleaks detect --source . -r gitleaks-report.json || true'
             }
         }
         stage('SonarQube Analysis') {
@@ -51,6 +49,42 @@ pipeline {
             steps {
                 script {
                     trivy_fs_scan()
+                }
+            }
+        }
+        stage('Build Frontend & Backend') {
+            parallel {
+                stage ('Build Frontend') {
+                    steps {
+                        script {
+                            docker_build("${FRONTEND}", "${IMAGE_TAG}", "${DOCKERHUB_USER}", "./frontend")
+                        }
+                    }
+                }
+                stage ('Build Backend') {
+                    steps {
+                        script {
+                            docker_build("${BACKEND}", "${IMAGE_TAG}", "${DOCKERHUB_USER}", "./backend")
+                        }
+                    }
+                }
+            }
+        }
+        stage('Push To Dockerhub') {
+            parallel {
+                stage('Pushing Frontend to Dockerhub') {
+                    steps {
+                        script {
+                            docker_push("${FRONTEND}", "${IMAGE_TAG}", "${DOCKERHUB_USER}")
+                        }
+                    }
+                }
+                stage('Pushing Backend to Dockerhub') {
+                    steps {
+                        script {
+                            docker_push("${BACKEND}", "${IMAGE_TAG}", "${DOCKERHUB_USER}")
+                        }
+                    }
                 }
             }
         }
