@@ -3,8 +3,8 @@ pipeline {
     agent any
     environment {
         SONAR_EV = tool 'Sonar'
-        FRONTEND = "gehenna-frontend-II"
-        BACKEND = "gehenna-backend-II"
+        FRONTEND = "gehenna-frontend-ii"
+        BACKEND = "gehenna-backend-ii"
         IMAGE_TAG = "${BUILD_NUMBER}"
         DOCKERHUB_USER = "namanss"
     }
