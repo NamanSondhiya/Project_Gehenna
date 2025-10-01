@@ -23,7 +23,7 @@ pipeline {
                     if (params.IMAGE_TAG_F == '' || params.IMAGE_TAG_B == '') {
                         error("Both 'IMAGE_TAG_F' and 'IMAGE_TAG_B' must be provided and non-empty.")
                     }
-                    echo "Using tags -> Frontend: ${params.IMAGE_TAG_F}, Backend: ${params.IMAGE_TAG_B}"
+                    echo "--||-----Using tags -> Frontend: ${params.IMAGE_TAG_F}, Backend: ${params.IMAGE_TAG_B}-------||--"
                 }
             }
         }
@@ -90,14 +90,14 @@ pipeline {
                 stage('Scan Frontend Image') {
                     steps {
                         script {
-                            trivy_image_scan("${FRONTEND}", "${params.IMAGE_TAG_F}")
+                            trivy_image_scan("${FRONTEND}", "${params.IMAGE_TAG_F}", "${DOCKERHUB_USER}")    
                         }
                     }
                 }
                 stage('Scan Backend Image') {
                     steps {
                         script {
-                            trivy_image_scan("${BACKEND}", "${params.IMAGE_TAG_B}")  
+                            trivy_image_scan("${BACKEND}", "${params.IMAGE_TAG_B}", "${DOCKERHUB_USER}")  
                         }
                     }
                 }
