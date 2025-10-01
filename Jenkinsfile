@@ -4,8 +4,8 @@ pipeline {
     parameters {
         booleanParam(name: 'Deploy_with_DockerCompose', defaultValue: false, description: 'Deploys Docker Image Locally with docker compose')
         booleanParam(name: 'Push_to_DockerHub', defaultValue: false, description: 'Uploads the Image to the Docker Hub') 
-        string(name: 'IMAGE_TAG_F', defaultValue: latest, description: 'Enter the Frontend Docker image tag')
-        string(name: 'IMAGE_TAG_B', defaultValue: latest, description: 'Enter the Backend Docker image tag')
+        string(name: 'IMAGE_TAG_F', defaultValue: '', description: 'Enter the Frontend Docker image tag')
+        string(name: 'IMAGE_TAG_B', defaultValue: '', description: 'Enter the Backend Docker image tag')
     }
     environment {
         SONAR_EV = tool 'Sonar'
@@ -17,6 +17,16 @@ pipeline {
         nodejs 'nodejs20'
     }
     stages {
+        stage('Validate Parameters') {
+            steps {
+                script {              
+                    if (params.IMAGE_TAG_F == '' || params.IMAGE_TAG_B == '') {
+                        error("Both 'IMAGE_TAG_F' and 'IMAGE_TAG_B' must be provided and non-empty.")
+                    }
+                    echo "Using tags -> Frontend: ${params.IMAGE_TAG_F}, Backend: ${params.IMAGE_TAG_B}"
+                }
+            }
+        }
         stage('Clean the Workspace') {
             steps {
                 cleanWs()
