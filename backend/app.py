@@ -3,13 +3,21 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 import os
 import re
+from dotenv import load_dotenv
 from connection import coll
 
-app = Flask(__name__)
-CORS(app, origins=["http://localhost:8001", "http://frontend:8001"])  # Limit origins for security
-PORT = int(os.environ.get('PORT', 8002))
+load_dotenv() 
 
-# Setup logging
+app = Flask(__name__)
+
+cors_origins = os.environ.get('FRONTEND_ORIGINS', 'http://localhost:8001,http://frontend:8001')
+cors_origins_list = [origin.strip() for origin in cors_origins.split(',')]
+
+CORS(app, origins=cors_origins_list)
+
+PORT = int(os.environ.get('PORT', 8002))
+HOST = os.environ.get('HOST', 'localhost')
+
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
@@ -48,8 +56,7 @@ def add_name(name):
             logger.warning(f"Invalid name attempt: {name} - {cleaned_name}")
             return jsonify({"error": cleaned_name}), 400
 
-        # Check if name already exists
-        if coll.find_one({"name": cleaned_name}):
+        if coll.find_one({"name": cleaned_name }):
             logger.warning(f"Duplicate name attempt: {cleaned_name}")
             return jsonify({"error": "Name already exists"}), 409
 
@@ -98,7 +105,6 @@ def search_names(query):
 @app.route('/health')
 def health():
     try:
-        # Check database connection
         coll.find_one()
         return jsonify({"status": "ok", "database": "connected"})
     except Exception as e:
@@ -107,4 +113,4 @@ def health():
 
 if __name__ == '__main__':
     logger.info("Starting backend server")
-    app.run(host='0.0.0.0', port=PORT)
+    app.run(host=HOST, port=PORT)

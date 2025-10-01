@@ -1,6 +1,9 @@
 @Library("jenkins-shared") _
 pipeline {
     agent any
+    parameters {
+        booleanParam(name: 'Deploy_with_DockerCompose', defaultValue: false, description: 'Deploys Docker Image Locally with docker compose') 
+    }
     environment {
         SONAR_EV = tool 'Sonar'
         FRONTEND = "gehenna-frontend-ii"
@@ -60,13 +63,6 @@ pipeline {
                             docker_build("${FRONTEND}", "${IMAGE_TAG}", "${DOCKERHUB_USER}", "./frontend")
                         }
                     }
-                    stage('Pushing Frontend to Dockerhub') {
-                       steps {
-                           script {
-                               docker_push("${FRONTEND}", "${IMAGE_TAG}", "${DOCKERHUB_USER}")
-                           }
-                       }
-                    }
                 }
                 stage ('Build Backend') {
                     steps {
@@ -74,13 +70,42 @@ pipeline {
                             docker_build("${BACKEND}", "${IMAGE_TAG}", "${DOCKERHUB_USER}", "./backend")
                         }
                     }
-                    stage('Pushing Backend to Dockerhub') {
-                        steps {
-                            script {
-                                docker_push("${BACKEND}", "${IMAGE_TAG}", "${DOCKERHUB_USER}")
-                            }
+                }
+            }
+        }
+        stage('Trivy Image Scan') {
+            steps {
+                script {
+                    trivy_image_scan("${FRONTEND}", "${IMAGE_TAG}")
+                    trivy_image_scan("${BACKEND}", "${IMAGE_TAG}")  
+                }
+            }
+        }
+        stage('Push To Dockerhub') {
+            parallel {
+                stage('Pushing Frontend to Dockerhub') {
+                    steps {
+                        script {
+                            docker_push("${FRONTEND}", "${IMAGE_TAG}", "${DOCKERHUB_USER}")
                         }
                     }
+                }
+                stage('Pushing Backend to Dockerhub') {
+                    steps {
+                        script {
+                            docker_push("${BACKEND}", "${IMAGE_TAG}", "${DOCKERHUB_USER}")
+                        }
+                    }
+                }
+            }
+        }
+        stage('Deploy with Docker-Compose') {
+            when {
+                expression { params.Deploy_with_DockerCompose }
+            }
+            steps {
+                script {
+                    docker_compose()
                 }
             }
         }
