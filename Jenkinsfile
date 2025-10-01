@@ -2,7 +2,8 @@
 pipeline {
     agent any
     parameters {
-        booleanParam(name: 'Deploy_with_DockerCompose', defaultValue: false, description: 'Deploys Docker Image Locally with docker compose') 
+        booleanParam(name: 'Deploy_with_DockerCompose', defaultValue: false, description: 'Deploys Docker Image Locally with docker compose')
+        booleanParam(name: 'Push_to_DockerHub', defaultValue: false, description: 'Uploads the Image to the Docker Hub') 
     }
     environment {
         SONAR_EV = tool 'Sonar'
@@ -108,6 +109,20 @@ pipeline {
                     docker_compose()
                 }
             }
+        }
+    }
+    post {
+        always {
+            archiveArtifacts artifacts: 'trivyfs.txt,trivy-image.json,trivy-image.txt,dependency-check-report.xml,gitleaks-report.json', allowEmptyArchive: true
+            emailext (
+                subject: "${currentBuild.currentResult}: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: "Build ${currentBuild.currentResult}\nProject: ${env.JOB_NAME}\nBuild: #${env.BUILD_NUMBER}\nURL: ${env.BUILD_URL}",
+                to: 'ssnaman4@gmail.com',
+                attachmentsPattern: 'trivyfs.txt,trivy-image.json,trivy-image.txt,dependency-check-report.xml'
+            )
+        }
+        cleanup {
+            sh 'docker system prune -f || true'
         }
     }
 }
