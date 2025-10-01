@@ -2,16 +2,17 @@
 pipeline {
     agent any
     parameters {
-        booleanParam(name: 'Deploy_with_DockerCompose', defaultValue: false, description: 'Deploys Docker Image Locally with docker compose')
-        booleanParam(name: 'Push_to_DockerHub', defaultValue: false, description: 'Uploads the Image to the Docker Hub') 
         string(name: 'IMAGE_TAG_F', defaultValue: '', description: 'Enter the Frontend Docker image tag')
         string(name: 'IMAGE_TAG_B', defaultValue: '', description: 'Enter the Backend Docker image tag')
+        booleanParam(name: 'Deploy_with_DockerCompose', defaultValue: false, description: 'Deploys Docker Image Locally with docker compose')
+        booleanParam(name: 'Push_to_DockerHub', defaultValue: false, description: 'Uploads the Image to the Docker Hub') 
     }
     environment {
         SONAR_EV = tool 'Sonar'
         FRONTEND = "gehenna-frontend-ii"
         BACKEND = "gehenna-backend-ii"
         DOCKERHUB_USER = "namanss"
+        EMAIL="ssnaman4@gmail.com"
     }
     tools {
         nodejs 'nodejs20'
@@ -39,31 +40,39 @@ pipeline {
                 }
             }
         }
-        stage('SonarQube Analysis') {
-            steps {
-                script {
-                    sonarqube_analysis(SONAR_EV, "gehenna", "gehenna")
+        stage('SonarQube Analysis & QualityGate') {
+            parallel {
+                stage('SonarQube Analysis') {
+                    steps {
+                        script {
+                            sonarqube_analysis(SONAR_EV, "gehenna", "gehenna")
+                        }
+                    }
+                }
+                stage('Quality Gate') {
+                    steps {
+                        script {
+                            sonarqube_QualityGate(5, true) 
+                        }
+                    }
                 }
             }
         }
-        stage('Quality Gate') {
-            steps {
-                script {
-                    sonarqube_QualityGate(5, true) 
+        stage('Secuirty Scan') {
+            parallel {
+                stage('Owasp Dependency Check') {
+                    steps {
+                        script {
+                            owasp_scan()
+                        }
+                    }
                 }
-            }
-        }
-        stage('Owasp Dependency Check') {
-            steps {
-                script {
-                    owasp_scan()
-                }
-            }
-        }
-        stage('Trivy FileSystem Scan') {
-            steps {
-                script {
-                    trivy_fs_scan()
+                stage('Trivy FileSystem Scan') {
+                    steps {
+                        script {
+                            trivy_fs_scan()
+                        }
+                    }
                 }
             }
         }
@@ -135,9 +144,16 @@ pipeline {
         always {
             archiveArtifacts artifacts: 'trivyfs.txt,trivy-image.json,trivy-image.txt,dependency-check-report.xml,gitleaks-report.json', allowEmptyArchive: true
             emailext (
-                subject: "${currentBuild.currentResult}: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                body: "Build ${currentBuild.currentResult}\nProject: ${env.JOB_NAME}\nBuild: #${env.BUILD_NUMBER}\nURL: ${env.BUILD_URL}",
-                to: 'ssnaman4@gmail.com',
+                subject: "${currentBuild.currentResult}: ${env.JOB_NAME} #${env.BUILD_NUMBER} - ${params.ENVIRONMENT}",
+                body: """
+                    Build: ${currentBuild.currentResult}
+                    Project: ${env.JOB_NAME}
+                    Build: #${env.BUILD_NUMBER}
+                    Frontend Tag: ${params.IMAGE_TAG_F}
+                    Backend Tag: ${params.IMAGE_TAG_B}
+                    URL: ${env.BUILD_URL}
+                """,
+                to: "${EMAIL}",
                 attachmentsPattern: 'trivyfs.txt,trivy-image.json,trivy-image.txt,dependency-check-report.xml'
             )
         }
