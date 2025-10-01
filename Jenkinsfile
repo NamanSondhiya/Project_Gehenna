@@ -75,10 +75,20 @@ pipeline {
             }
         }
         stage('Trivy Image Scan') {
-            steps {
-                script {
-                    trivy_image_scan("${FRONTEND}", "${IMAGE_TAG}")
-                    trivy_image_scan("${BACKEND}", "${IMAGE_TAG}")  
+            parallel {
+                stage('Scan Frontend Image') {
+                    steps {
+                        script {
+                            trivy_image_scan("${FRONTEND}", "${IMAGE_TAG}")
+                        }
+                    }
+                }
+                stage('Scan Backend Image') {
+                    steps {
+                        script {
+                            trivy_image_scan("${BACKEND}", "${IMAGE_TAG}")  
+                        }
+                    }
                 }
             }
         }
