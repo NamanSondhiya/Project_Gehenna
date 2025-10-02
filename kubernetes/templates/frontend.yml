@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gehenna-frontend
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: gehenna-frontend
+  template:
+    metadata:
+      labels:
+        app: gehenna-frontend
+    spec:
+      containers:
+        - name: gehenna-frontend
+          image: {{ .Values.frontendImage }}
+          env:
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: gehenna-config
+                  key: PORT
+            - name: BACKEND_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: gehenna-config
+                  key: BACKEND_URL
+          ports:
+            - containerPort: 8001
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gehenna-frontend
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app: gehenna-frontend
+  ports:
+    - port: 8001
+      targetPort: 8001
+  type: ClusterIP

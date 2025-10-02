@@ -1,18 +1,27 @@
-from flask import Flask, request, render_template
+from flask import Flask, render_template, jsonify
 import os
 import requests
+from dotenv import load_dotenv
 
+load_dotenv()
 
+app = Flask(__name__)
 BACKEND_URL = os.environ.get('BACKEND_URL', 'http://localhost:8002')
 PORT = int(os.environ.get('PORT', 8001))
-app = Flask(__name__)
+HOST = os.environ.get('HOST', '0.0.0.0')
 
 @app.route('/')
 def index():
-    backend_data = requests.get(f'{BACKEND_URL}/api/get').json()
-    print(backend_data)
-    
-    return render_template('index.html', data=backend_data.get('names', []))
+    try:
+        response = requests.get(f'{BACKEND_URL}/api/get')
+        names = response.json()
+    except:
+        names = []
+    return render_template('index.html', data=names)
+
+@app.route('/health')
+def health():
+    return jsonify({"status": "ok"})
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=PORT)
+    app.run(host=HOST, port=PORT)

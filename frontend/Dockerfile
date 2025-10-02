@@ -1,13 +1,15 @@
-FROM python:3.13.5-alpine3.21
+FROM python:3.13-alpine
 
-WORKDIR /app    
+WORKDIR /app
 
-ADD requirements.txt .
+RUN python -m venv venv
+ENV PATH="/app/venv/bin:$PATH"
 
+COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-ADD . .
+COPY . .
 
-ENTRYPOINT [ "python" ]
+EXPOSE 8001
 
-CMD [ "app.py" ]
+CMD ["python", "app.py"]
