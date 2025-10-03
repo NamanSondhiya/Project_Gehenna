@@ -47,14 +47,14 @@ pipeline {
                         git status
 
                         git config --global user.email "ssnaman4@gmail.com"
-                        git config --global user.name "${GIT USER}"
+                        git config --global user.name "$GIT_USER"
                         
                         git add .
 
                         git commit -m "Updated values.yaml" || echo "No changes to commit"
 
                         echo "Pushing changes to github"
-                        git push https://${GIT_USER}:${GIT_PASS}@github.com/NamanSondhiya/Project_Gehenna.git devOps
+                        git push https://$GIT_USER:$GIT_PASS@github.com/NamanSondhiya/Project_Gehenna.git devOps
                     '''
                 }
             }
