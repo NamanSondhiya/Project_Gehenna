@@ -154,7 +154,7 @@ pipeline {
             )
         }
         success {
-            build job: "Gehenna-CD", parameters [
+            build job: "Gehenna-CD", parameters:[
                 string(name: 'IMAGE_TAG_F', value: "${params.IMAGE_TAG_F}"),
                 string(name: 'IMAGE_TAG_B', value: "${params.IMAGE_TAG_B}")
             ]
