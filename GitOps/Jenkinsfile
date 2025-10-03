@@ -22,7 +22,7 @@ pipeline {
                 }
             }
         }
-        stage('Verfiy: Docker Image Tag') {
+        stage('Verify Docker Image Tags') {
             steps {
                 script {
                     echo "IMAGE_TAG_F: ${params.IMAGE_TAG_F}"
@@ -42,16 +42,16 @@ pipeline {
         }
         stage('Git Code Update and Push to Github') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'github-creds', gitToolName: 'Default')]) {
-                    sh  '''
+                withCredentials([usernamePassword(credentialsId: 'github-creds', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {                
+                     sh  """
                         git status
                         
                         git add .
                         
                         git commit -m "updated values.yaml" || echo "No changes to commit"
 
-                        git push https://$GIT_USER:$GIT_PASS@github.com/NamanSondhiya/Project_Gehenna.git k8s
-                        '''
+                        git push https://\$GIT_USER:\$GIT_PASS@github.com/NamanSondhiya/Project_Gehenna.git devOps
+                        """
                 }
             }
         }
