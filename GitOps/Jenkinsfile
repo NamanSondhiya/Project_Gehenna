@@ -25,8 +25,8 @@ pipeline {
         stage('Verfiy: Docker Image Tag') {
             steps {
                 script {
-                    echo "IMAGE_TAG_F": ${params.IMAGE_TAG_F}
-                    echo "IMAGE_TAG_B": ${params.IMAGE_TAG_B}
+                    echo "IMAGE_TAG_F: ${params.IMAGE_TAG_F}"
+                    echo "IMAGE_TAG_B: ${params.IMAGE_TAG_B}"
                 }
             }
         }
