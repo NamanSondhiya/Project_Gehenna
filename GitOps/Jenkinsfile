@@ -35,7 +35,7 @@ pipeline {
                 script {
                     sh """
                         sed -i "s|frontendImage: docker.io/namanss/gehenna-frontend-ii:.*|frontendImage: docker.io/namanss/gehenna-frontend-ii:${params.IMAGE_TAG_F}|" kubernetes/values.yaml
-                        
+
                         sed -i "s|backendImage: docker.io/namanss/gehenna-backend-ii:.*|backendImage: docker.io/namanss/gehenna-backend-ii:${params.IMAGE_TAG_B}|" kubernetes/values.yaml
                     """
                 }
@@ -52,7 +52,7 @@ pipeline {
                         
                         git add .
 
-                        git commit -m "Updated values.yaml" || echo "No changes to commit"
+                        git commit -m "Updated values.yaml via CD-JOB" || echo "No changes to commit"
 
                         echo "Pushing changes to github"
                         git push https://$GIT_USER:$GIT_PASS@github.com/NamanSondhiya/Project_Gehenna.git devOps
