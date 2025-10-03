@@ -43,15 +43,12 @@ pipeline {
         stage('Git Code Update and Push to Github') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'github-creds', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {                
-                     sh  """
+                    sh '''
                         git status
-                        
                         git add .
-                        
                         git commit -m "updated values.yaml" || echo "No changes to commit"
-
-                        git push https://\$GIT_USER:\$GIT_PASS@github.com/NamanSondhiya/Project_Gehenna.git devOps
-                        """
+                        git push https://$GIT_USER:$GIT_PASS@github.com/NamanSondhiya/Project_Gehenna.git devOps
+                    '''
                 }
             }
         }
