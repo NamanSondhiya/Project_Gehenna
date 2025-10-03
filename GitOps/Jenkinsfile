@@ -46,13 +46,13 @@ pipeline {
                     sh '''
                         echo "Checking repository status: "
                         git status
-        
+
                         echo "Adding change to git: "
                         git add .
-        
+
                         echo "Committing changes: "
                         git commit -m "Updated values.yaml" || echo "No changes to commit"
-        
+
                         echo "Pushing changes to github"
                         git push https://${GIT_USER}:${GIT_PASS}@github.com/NamanSondhiya/Project_Gehenna.git devOps
                     '''
@@ -61,9 +61,6 @@ pipeline {
         }
     }
     post {
-        always {
-            cleanWs()
-        }
         success {
             echo 'Pipeline completed successfully!'
         }
