@@ -33,10 +33,11 @@ pipeline {
         stage('Update the K8s manifest values.yaml') {
             steps {
                 script {
-                    sh '''
-                        sed -i "s|image: gehenna-frontend-ii:.*$|image: gehenna-frontend-ii:${IMAGE_TAG_F}|" kubernetes/values.yaml
-                        sed -i "s|image: gehenna-backend-ii:.*$|image: gehenna-backend-ii:${IMAGE_TAG_B}|" kubernetes/values.yaml
-                    '''
+                    sh """
+                        sed -i "s|frontendImage: docker.io/namanss/gehenna-frontend-ii:.*|frontendImage: docker.io/namanss/gehenna-frontend-ii:${params.IMAGE_TAG_F}|" kubernetes/values.yaml
+                        
+                        sed -i "s|backendImage: docker.io/namanss/gehenna-backend-ii:.*|backendImage: docker.io/namanss/gehenna-backend-ii:${params.IMAGE_TAG_B}|" kubernetes/values.yaml
+                    """
                 }
             }
         }
