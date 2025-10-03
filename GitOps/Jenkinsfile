@@ -42,17 +42,20 @@ pipeline {
         }
         stage('Git Code Update and Push to Github') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'github-creds', gitToolName: 'Default')]) {
+                withCredentials([usernamePassword(credentialsId: 'github-creds', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
                     sh '''
-                    echo "Checking repository status: "
-                    git status
-                    echo "Adding change to git: "
-                    git add .
-                    echo "Commiting changes: "
-                    git commit -m "Updated values.yaml" || echo "No changes to commit"
-                    echo "Pushing changes to github"
-                    git push https://github.com/NamanSondhiya/Project_Gehenna.git devOps
-                '''
+                        echo "Checking repository status: "
+                        git status
+        
+                        echo "Adding change to git: "
+                        git add .
+        
+                        echo "Committing changes: "
+                        git commit -m "Updated values.yaml" || echo "No changes to commit"
+        
+                        echo "Pushing changes to github"
+                        git push https://${GIT_USER}:${GIT_PASS}@github.com/NamanSondhiya/Project_Gehenna.git devOps
+                    '''
                 }
             }
         }
