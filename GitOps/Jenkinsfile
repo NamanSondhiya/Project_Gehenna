@@ -44,13 +44,13 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'github-creds', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
                     sh '''
-                        echo "Checking repository status: "
                         git status
 
-                        echo "Adding change to git: "
+                        git config --global user.email "ssnaman4@gmail.com"
+                        git config --global user.name "${GIT USER}"
+                        
                         git add .
 
-                        echo "Committing changes: "
                         git commit -m "Updated values.yaml" || echo "No changes to commit"
 
                         echo "Pushing changes to github"
