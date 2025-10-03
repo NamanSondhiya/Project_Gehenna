@@ -1,0 +1,59 @@
+@library("Jenkins-shared") _
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'IMAGE_TAG_F', defaultValue: '', description: 'Frontend Docker image tag after CI build')
+        string(name: 'IMAGE_TAG_B', defaultValue: '', description: 'Backend Docker image tag after CI build')
+    }
+
+    stages {
+        stage('Clean Workplace') {
+            steps {
+                script {
+                    clean_ws()
+                }
+            }
+        }
+        stage('Code Clone') {
+            steps {
+                script {
+                    git_clone("https://github.com/NamanSondhiya/Project_Gehenna.git", "devOps")
+                }
+            }
+        }
+        stage('Verfiy: Docker Image Tag') {
+            steps {
+                script {
+                    echo "IMAGE_TAG_F": ${params.IMAGE_TAG_F}
+                    echo "IMAGE_TAG_B": ${params.IMAGE_TAG_B}
+                }
+            }
+        }
+        stage('Update the K8s manifest values.yaml') {
+            steps {
+                script {
+                    sh """
+                        sed -i 's|image: gehenna-frontend-ii:.*$|image: gehenna-frontend-ii:${params.IMAGE_TAG_F}|' kubernetes/values.yaml
+                        sed -i 's|image: gehenna-backend-ii:.*$|image: gehenna-backend-ii:${params.IMAGE_TAG_B}|' kubernetes/values.yaml
+                    """
+                }
+            }
+        }
+        stage('Git Code Update and Push to Github') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'github-creds', gitToolName: 'Default')]) {
+                    sh  '''
+                        git status
+                        
+                        git add .
+                        
+                        git commit -m "updated values.yaml" || echo "No changes to commit"
+
+                        git push https://$GIT_USER:$GIT_PASS@github.com/NamanSondhiya/Project_Gehenna.git k8s
+                        '''
+                }
+            }
+        }
+    }
+}
