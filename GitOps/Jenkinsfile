@@ -7,6 +7,10 @@ pipeline {
         string(name: 'IMAGE_TAG_B', defaultValue: '', description: 'Backend Docker image tag after CI build')
     }
 
+    environment {
+        EMAIL="ssnaman4@gmail.com"
+    }
+
     stages {
         stage('Clean Workplace') {
             steps {
@@ -63,10 +67,15 @@ pipeline {
     }
     post {
         success {
-            echo 'Pipeline completed successfully!'
+            script {
+                email_success("${EMAIL}")
+            }
+
         }
         failure {
-            echo 'Pipeline failed. Check logs for details.'
+            script {
+                email_failure("${EMAIL}")
+            }
         }
     }
 }
