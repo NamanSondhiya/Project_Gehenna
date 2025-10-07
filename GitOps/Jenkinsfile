@@ -22,7 +22,7 @@ pipeline {
         stage('Code Clone') {
             steps {
                 script {
-                    git_clone("https://github.com/NamanSondhiya/Project_Gehenna.git", "main")
+                    git_clone("https://github.com/NamanSondhiya/Project_Gehenna_DevSecOps.git", "main")
                 }
             }
         }
@@ -59,7 +59,7 @@ pipeline {
                         git commit -m "Updated values.yaml via CD-JOB" || echo "No changes to commit"
 
                         echo "Pushing changes to github"
-                        git push https://$GIT_USER:$GIT_PASS@github.com/NamanSondhiya/Project_Gehenna.git main
+                        git push https://$GIT_USER:$GIT_PASS@github.com/NamanSondhiya/Project_Gehenna_DevSecOps.git main
                     '''
                 }
             }
