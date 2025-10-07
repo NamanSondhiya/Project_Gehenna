@@ -1,5 +1,5 @@
 namespace: gehenna
-frontendImage: docker.io/namanss/gehenna-frontend-ii:3.2
-backendImage: docker.io/namanss/gehenna-backend-ii:3.2
+frontendImage: docker.io/namanss/gehenna-frontend-ii:4.0
+backendImage: docker.io/namanss/gehenna-backend-ii:4.0
 mongoexpressImage: docker.io/mongo-express:1.0.2-20-alpine3.19
 mongoImage: docker.io/mongo:noble
