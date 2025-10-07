@@ -113,7 +113,6 @@
     </style>
 </head>
 <body>
-    <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: var(--primary-color);">
         <div class="container">
             <a class="navbar-brand" href="#">
@@ -138,7 +137,6 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
     <section class="hero-section">
         <div class="container text-center">
             <h1 class="display-4 fw-bold mb-4">
@@ -164,10 +162,8 @@
         </div>
     </section>
 
-    <!-- Main Content -->
     <div class="container">
         <div class="row">
-            <!-- Add Name Form -->
             <div class="col-lg-4 mb-4">
                 <div class="card h-100">
                     <div class="card-header bg-primary text-white">
@@ -197,7 +193,6 @@
                 </div>
             </div>
 
-            <!-- Data Display -->
             <div class="col-lg-8 mb-4">
                 <div class="card h-100">
                     <div class="card-header bg-secondary text-white">
@@ -222,7 +217,6 @@
                                 </button>
                             </div>
                             <div id="namesList" class="row">
-                                <!-- Names will be populated here -->
                             </div>
                         </div>
                     </div>
@@ -230,7 +224,6 @@
             </div>
         </div>
 
-        <!-- API Information -->
         <div class="row mt-4">
             <div class="col-12">
                 <div class="card">
@@ -270,7 +263,6 @@
         </div>
     </div>
 
-    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="row">
@@ -290,13 +282,10 @@
         </div>
     </footer>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Configuration
         const BACKEND_URL = '{{ backend_url or "http://localhost:8002" }}';
 
-        // DOM Elements
         const loadingSpinner = document.getElementById('loadingSpinner');
         const dataContainer = document.getElementById('dataContainer');
         const namesList = document.getElementById('namesList');
@@ -304,13 +293,11 @@
         const backendStatus = document.getElementById('backend-status');
         const apiStatus = document.getElementById('apiStatus');
 
-        // Initialize application
         document.addEventListener('DOMContentLoaded', function() {
             checkBackendStatus();
             loadData();
         });
 
-        // Check backend status
         async function checkBackendStatus() {
             try {
                 const response = await fetch(`${BACKEND_URL}/`);
@@ -331,7 +318,6 @@
             }
         }
 
-        // Load data from backend
         async function loadData() {
             showLoading(true);
             try {
@@ -349,7 +335,6 @@
             }
         }
 
-        // Display data
         function displayData(names) {
             namesList.innerHTML = '';
 
@@ -387,7 +372,6 @@
             });
         }
 
-        // Add name form submission
         document.getElementById('addNameForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
@@ -410,14 +394,13 @@
 
                 showAlert(result.message, 'success');
                 nameInput.value = '';
-                loadData(); // Refresh data
+                loadData(); 
             } catch (error) {
                 console.error('Error adding name:', error);
                 showAlert('Failed to add name: ' + error.message, 'danger');
             }
         });
 
-        // Search functionality
         document.getElementById('searchInput').addEventListener('input', function(e) {
             const query = e.target.value.trim();
             if (query.length > 0) {
@@ -427,7 +410,6 @@
             }
         });
 
-        // Search data
         async function searchData(query) {
             showLoading(true);
             try {
@@ -445,7 +427,6 @@
             }
         }
 
-        // Delete name
         async function deleteName(name) {
             if (!confirm(`Are you sure you want to delete "${name}"?`)) {
                 return;
@@ -461,19 +442,17 @@
                 }
 
                 showAlert(result.message, 'success');
-                loadData(); // Refresh data
+                loadData(); 
             } catch (error) {
                 console.error('Error deleting name:', error);
                 showAlert('Failed to delete name: ' + error.message, 'danger');
             }
         }
 
-        // Refresh data
         function refreshData() {
             loadData();
         }
 
-        // Show/hide loading spinner
         function showLoading(show) {
             if (show) {
                 loadingSpinner.style.display = 'block';
@@ -484,7 +463,6 @@
             }
         }
 
-        // Show alert
         function showAlert(message, type) {
             const alert = document.createElement('div');
             alert.className = `alert alert-${type} alert-dismissible fade show`;
@@ -496,7 +474,6 @@
             alertContainer.innerHTML = '';
             alertContainer.appendChild(alert);
 
-            // Auto-dismiss after 5 seconds
             setTimeout(() => {
                 if (alert.parentNode) {
                     alert.remove();
@@ -504,14 +481,12 @@
             }, 5000);
         }
 
-        // Escape HTML to prevent XSS
         function escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
         }
 
-        // Auto-refresh data every 30 seconds
         setInterval(loadData, 30000);
     </script>
 </body>

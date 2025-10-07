@@ -36,7 +36,7 @@ pipeline {
         stage('CodeClone From GitHub') {
             steps {
                 script {
-                    git_clone("https://github.com/NamanSondhiya/Project_Gehenna.git", "devOps")
+                    git_clone("https://github.com/NamanSondhiya/Project_Gehenna.git", "main")
                 }
             }
         }
