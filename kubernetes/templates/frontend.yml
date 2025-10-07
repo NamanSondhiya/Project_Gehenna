@@ -20,7 +20,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: gehenna-config
-                  key: PORT
+                  key: FRONTEND_PORT
             - name: BACKEND_URL
               valueFrom:
                 configMapKeyRef:
